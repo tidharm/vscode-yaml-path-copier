@@ -1,0 +1,69 @@
+{
+  "name": "yaml-path-copier",
+  "version": "1.0.1",
+  "displayName": "YAML Path Copier",
+  "description": "VSCode/Cursor extension that allows copying YAML paths from YAML files",
+  "author": "tidharm",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tidharm/vscode-yaml-path-copier"
+  },
+  "license": "GPL-3.0-only",
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild src/extension.ts --bundle --platform=node --outfile=out/extension.js --external:vscode --format=cjs --target=node18 --sourcemap",
+    "watch": "esbuild src/extension.ts --bundle --platform=node --outfile=out/extension.js --external:vscode --format=cjs --target=node18 --sourcemap --watch",
+    "package": "npm run compile && vsce package",
+    "install:cursor": "cursor --install-extension $(ls -t yaml-path-copier-*.vsix | head -1) --force",
+    "install:vscode": "code --install-extension $(ls -t yaml-path-copier-*.vsix | head -1) --force",
+    "publish": "vsce publish"
+  },
+  "icon": "assets/yaml-path-copier.png",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "activationEvents": [
+    "onLanguage:yaml"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "yaml-path-copier.copyPath",
+        "title": "Copy YAML Path"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorLangId == yaml",
+          "command": "yaml-path-copier.copyPath",
+          "group": "9_cutcopypaste"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "YAML Path Copier",
+      "properties": {
+        "yaml-path-copier.logLevel": {
+          "type": "string",
+          "enum": ["error", "info", "debug"],
+          "default": "info",
+          "description": "Set the logging level."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "winston": "^3.15.0",
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/vscode": "^1.94.0",
+    "@types/winston": "^2.4.4",
+    "@vscode/vsce": "^3.3.2",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.3"
+  }
+}
